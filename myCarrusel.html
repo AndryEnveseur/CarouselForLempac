@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./myCarrusel.css">
+</head>
+<body>
+    <main id="container">
+        <div class="carousel-container" style="--max-height: auto">
+            <div class="carousel-sub-container">
+                <div class="carousel-button carousel-button-previous">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>
+                    </svg>
+                </div>
+                <div class="carousel-items-container">
+                    <div class="carousel-item" onclick="doBiggerImage(this)">
+                        <div>
+                            <img src="https://picsum.photos/1800/700?random=0" alt="">
+                        </div>
+                    </div>
+                    <div class="carousel-item" onclick="doBiggerImage(this)">
+                        <div>
+                            <img src="https://picsum.photos/1800/700?random=1" alt="">
+                        </div>
+                    </div>
+                    <div class="carousel-item" onclick="doBiggerImage(this)">
+                        <div>
+                            <img src="https://picsum.photos/1800/700?random=2" alt="">
+                        </div>
+                    </div>
+                    <div class="carousel-item" onclick="doBiggerImage(this)">
+                        <div>
+                            <img src="https://picsum.photos/1800/700?random=3" alt="">
+                        </div>
+                    </div>
+                    <div class="carousel-item" onclick="doBiggerImage(this)">
+                        <div>
+                            <img src="https://picsum.photos/1800/700?random=4" alt="">
+                        </div>
+                    </div>
+                    <div class="carousel-item" onclick="doBiggerImage(this)">
+                        <div>
+                            <img src="https://picsum.photos/1800/700?random=5" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-button carousel-button-next">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="carousel-bigger-item carousel-bigger-item-hidden" onclick="closeBiggerImage(this)">
+                <div>
+                    <span>
+                        <svg width="30px" fill="white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+<script>
+    const doBiggerImage = (element) => {
+        const modelBiggerItem = document.querySelector('.carousel-bigger-item');
+        const imageContainer = modelBiggerItem.querySelector('div');
+        imageContainer.style.backgroundImage = `url(${element.querySelector('img').src})`;
+        modelBiggerItem.classList.remove('carousel-bigger-item-hidden');
+    } 
+
+    const closeBiggerImage = (element) => element.classList.add('carousel-bigger-item-hidden');
+</script>
+<script>
+    const CURRENT_POS = '--max-items-displayed';
+    const EVENT_LISTENER = 'click';
+    const carouselContainer = document.querySelector('.carousel-container');
+    const itemsContainer = document.querySelector('.carousel-items-container');
+
+    const previousItemButton = carouselContainer.querySelector('.carousel-button-previous');
+    const nextItemButton = carouselContainer.querySelector('.carousel-button-next');
+    const MAX_ITEMS_DISPLAYED = parseInt(getComputedStyle(carouselContainer).getPropertyValue(CURRENT_POS));
+
+    let currentItemWidth = itemsContainer.children[0].clientWidth;
+    let currentItemPos = 0;
+    let someCarouselItemWasClicked = false;
+
+    const moveItems = (distance, direction) => {
+        itemsContainer.style.transform = `translateX(${distance * direction}px)`;
+    }
+
+    previousItemButton.addEventListener(EVENT_LISTENER, () => {
+        currentItemPos--;
+
+        if (currentItemPos > -1) {
+            moveItems(currentItemWidth * currentItemPos, -1);
+        } else {
+            currentItemPos++;
+        }
+    });
+
+    const childrenItemsContainer = itemsContainer.children;
+    const MAX_CAROUSEL_ITEMS = childrenItemsContainer.length;
+
+    nextItemButton.addEventListener(EVENT_LISTENER, () => {
+        currentItemPos++;
+
+        if (currentItemPos + MAX_ITEMS_DISPLAYED <= MAX_CAROUSEL_ITEMS) {
+            moveItems(currentItemWidth * currentItemPos, -1);
+        } else {
+            currentItemPos--;
+        }
+    });
+
+    const resizeElements = () => {
+        currentItemWidth = itemsContainer.children[0].clientWidth;
+
+        Array.from(itemsContainer.children).forEach(item => {
+            item.style.minWidth = `calc(100% / var(--max-items-displayed));`;
+            item.style.width = `calc(100% / var(--max-items-displayed));`;
+            moveItems(currentItemWidth * currentItemPos, -1);
+        });
+    }
+    
+    let doit;
+
+    window.addEventListener('resize', () => {
+        clearTimeout(setTimeout(resizeElements, 1000));
+        doit = setTimeout(resizeElements, 1000);  
+    });
+
+    // ------------------------------------------------------------------------------------------------------------------------------------
+
+    // const currentBodyWidth = (size) => document.body.clientWidth <= size;
+
+
+    // let query1100px = currentBodyWidth(1100)
+
+    // window.addEventListener('resize', () => {
+    //     itemWidth = itemsContainer.children[0].clientWidth;
+    //     console.log(currentBodyWidth(1100))
+    // })
+
+</script>
+</html>
