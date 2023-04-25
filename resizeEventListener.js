@@ -7,5 +7,5 @@ window.addEventListener('resize', () => {
     updatingCarouselPos = setTimeout(checkIfReInitIsNeeded, DELTA_TIME_UPDATE_CURRENT_POSITION);
 
     clearTimeout(refreshingElements);
-    refreshingElements = setTimeout(refreshElements, DELTA_TIME_UPDATE_CURRENT_POSITION);
+    refreshingElements = setTimeout(refreshElements, DELTA_TIME_REFRESH_ELEMENTS);
 });
